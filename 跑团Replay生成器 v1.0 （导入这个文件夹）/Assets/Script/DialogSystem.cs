@@ -4,7 +4,7 @@ using UnityEngine;
 using UnityEngine.UI;
 using System.IO;
 
-/* 
+/*
  * Copyright (c) DaNGo_iz. All rights reserved.
  * 更多工具和游戏请访问网站：www.dangoiz.com
  * 默认素材：COC模组《请勿点击》的Replay Log
@@ -22,14 +22,14 @@ public class DialogSystem : MonoBehaviour
     Dictionary<string, int> strToIntTexts = new Dictionary<string, int>();
     Dictionary<int, string> intToStrTexts = new Dictionary<int, string>();
     int startChapterIndex; //
-    
-    float tempTextSpeed;     int index; 
+
+    float tempTextSpeed;
+    int index;
     Dictionary<string, Sprite> strToScenes = new Dictionary<string, Sprite>();
     Dictionary<string, Sprite> strToNewChapterFitstScene = new Dictionary<string, Sprite>();
     Dictionary<int, string> intToNCFSstr = new Dictionary<int, string>();
     Dictionary<string, Sprite> strToForegroundScenes = new Dictionary<string, Sprite>();
 
-    
     [Header("Music")]
     public AudioClip[] bgmClips;
     public AudioClip[] bgsClips;
@@ -53,27 +53,40 @@ public class DialogSystem : MonoBehaviour
     [Space(50)]
     public GameObject chapterButtonPrefab;
     public Text textLabel;
-    public Image littleArrow;     public Image shining;     public Image background;
+    public Image littleArrow;
+    public Image shining;
+    public Image background;
     public Canvas foreground;
     public float spriteSpeed;
     public Button menuButton;
     public Button autoButton;
     public Button autoButtonClosed;
-    List<string> textList = new List<string>(); 
+    List<string> textList = new List<string>();
     public Canvas menu;
     int chapterNumber;
     int maxChapter;
 
-        float shakeTime = 1.0f;    private float currentTime = 0.0f;
+    float shakeTime = 1.0f;
+    private float currentTime = 0.0f;
     private List<Vector3> gameobjpons = new List<Vector3>();
-    public Camera cameraToShake;    bool shake;
+    public Camera cameraToShake;
+    bool shake;
 
-        public Image[] faceImage;
+    public Image[] faceImage;
     public Image[] nameImage;
     public Text[] nameLabel;
     bool[] slotEmpty = new bool[4];
 
-        bool textFinished;     bool cancelTyping;     bool bigger;     bool betterInterface;     bool isChangingScene;     bool menuIsOpen;     bool foregroundIsOpen;     bool auto;     bool nextLine;     bool getTypingSound;
+    bool textFinished;
+    bool cancelTyping;
+    bool bigger;
+    bool betterInterface;
+    bool isChangingScene;
+    bool menuIsOpen;
+    bool foregroundIsOpen;
+    bool auto;
+    bool nextLine;
+    bool getTypingSound;
 
     bool textCreateFinished;
 
@@ -81,29 +94,28 @@ public class DialogSystem : MonoBehaviour
         TextCreate();
         menu.gameObject.SetActive(false);
 
-
         GetTextFromFile(intToStrTexts[startChapterIndex]); //
-        
-               tempTextSpeed = textSpeed; 
-                for (int i = 0; i < 4; i++)
+
+        tempTextSpeed = textSpeed;
+        for (int i = 0; i < 4; i++)
         {
             slotEmpty[i] = true;
             SlotInvisible(faceImage[i], nameImage[i], nameLabel[i]);
         }
 
-                for (int i = 0; i < namesOfNPC.Length; i++)
+        for (int i = 0; i < namesOfNPC.Length; i++)
         {
             namesToNum.Add(namesOfNPC[i], i);
             numToNames.Add(i, namesOfNPC[i]);
         }
 
-                FileInfo[] backgroundsFileName = AllFileNames(Application.streamingAssetsPath + "/Background");
+        FileInfo[] backgroundsFileName = AllFileNames(Application.streamingAssetsPath + "/Background");
         for (int i = 0; i < backgroundsFileName.Length; i++)
         {
             strToScenes.Add(backgroundsFileName[i].Name, GetSpriteFromFilePath(Application.streamingAssetsPath + "/Background/" + backgroundsFileName[i].Name));
         }
 
-                FileInfo[] backgroundsNewFileName = AllFileNames(Application.streamingAssetsPath + "/BackgroundInNewChapter");
+        FileInfo[] backgroundsNewFileName = AllFileNames(Application.streamingAssetsPath + "/BackgroundInNewChapter");
         for (int i = 0; i < backgroundsNewFileName.Length; i++)
         {
             strToNewChapterFitstScene.Add(backgroundsNewFileName[i].Name, GetSpriteFromFilePath(Application.streamingAssetsPath + "/BackgroundInNewChapter/" + backgroundsNewFileName[i].Name));
@@ -111,13 +123,13 @@ public class DialogSystem : MonoBehaviour
         }
         background.sprite = strToNewChapterFitstScene["sc00.png"];
 
-                FileInfo[] foregroundsFileName = AllFileNames(Application.streamingAssetsPath + "/Foreground");
+        FileInfo[] foregroundsFileName = AllFileNames(Application.streamingAssetsPath + "/Foreground");
         for (int i = 0; i < foregroundsFileName.Length; i++)
         {
             strToForegroundScenes.Add(foregroundsFileName[i].Name, GetSpriteFromFilePath(Application.streamingAssetsPath + "/Foreground/" + foregroundsFileName[i].Name));
         }
 
-                FileInfo[] characterFacesFileName = AllFileNames(Application.streamingAssetsPath + "/Characters");
+        FileInfo[] characterFacesFileName = AllFileNames(Application.streamingAssetsPath + "/Characters");
         for (int i = 0; i < characterFacesFileName.Length; i++)
         {
             strToFaces.Add(characterFacesFileName[i].Name, GetSpriteFromFilePath(Application.streamingAssetsPath + "/Characters/" + characterFacesFileName[i].Name));
@@ -128,7 +140,7 @@ public class DialogSystem : MonoBehaviour
         bgmSources = this.gameObject.AddComponent<AudioSource>();
         bgmSources.loop = true;
         bgmSources.volume = 0.6f;
-        bgmSources.pitch = 1; 
+        bgmSources.pitch = 1;
         bgsSources = this.gameObject.AddComponent<AudioSource>();
         bgsSources.loop = false;
         bgsSources.volume = 1f;
@@ -138,12 +150,12 @@ public class DialogSystem : MonoBehaviour
         typingSound.playOnAwake = false;
         typingSound.clip = typingSoundClips[typingSoundClips.Length - 1];
 
-                textFinished = true;
+        textFinished = true;
         StartCoroutine(SetTextUI());
     }
 
     void Update()     {
-        
+
         if (changeBGM)
         {
             bgmSources.clip = bgmClips[bgmIndex];
@@ -176,7 +188,8 @@ public class DialogSystem : MonoBehaviour
                 }
                 else if (!textFinished)
                 {
-                    cancelTyping = !cancelTyping;                 }
+                    cancelTyping = !cancelTyping;
+                }
             }
         }
         else
@@ -195,19 +208,22 @@ public class DialogSystem : MonoBehaviour
                 }
                 else if (!textFinished)
                 {
-                    cancelTyping = !cancelTyping;                 }
+                    cancelTyping = !cancelTyping;
+                }
             }
         }
-        
+
         if (shake)         {
             currentTime = shakeTime;
             shake = false;
         }
     }
 
-    void LateUpdate() { UpdateShake(); }
+    void LateUpdate() {
+        UpdateShake();
+    }
 
-        void TextCreate()     {
+    void TextCreate()     {
         FileInfo[] textFileName = AllFileNames(Application.streamingAssetsPath + "/TextFile");
         int buttonPosition = 3;
         int childIndex = 0;
@@ -258,7 +274,8 @@ public class DialogSystem : MonoBehaviour
                             autoButton.gameObject.SetActive(true);
                             autoButtonClosed.gameObject.SetActive(false);
                             ChooseChaper(fullButtonStr);
-                            chapterNumber = int.Parse(intToStrTexts[j].Substring(28, intToStrTexts[j].Length - 32));                         }
+                            chapterNumber = int.Parse(intToStrTexts[j].Substring(28, intToStrTexts[j].Length - 32));
+                        }
                     }
                 });
                 childIndex++;
@@ -270,7 +287,7 @@ public class DialogSystem : MonoBehaviour
         if (Directory.Exists(path))
         {
             DirectoryInfo direction = new DirectoryInfo(path);
-                        FileInfo[] files = direction.GetFiles("*", SearchOption.AllDirectories);
+            FileInfo[] files = direction.GetFiles("*", SearchOption.AllDirectories);
             for (int i = 0; i < files.Length; i++)
             {
                 if (files[i].Name.EndsWith(".meta"))
@@ -285,7 +302,8 @@ public class DialogSystem : MonoBehaviour
 
     Sprite GetSpriteFromFilePath(string path)     {
         byte[] ImgByte = getImageByte(path);
-        Texture2D texture2D = new Texture2D(1048, 1632);         texture2D.LoadImage(ImgByte);
+        Texture2D texture2D = new Texture2D(1048, 1632);
+        texture2D.LoadImage(ImgByte);
         Sprite sprite = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
         return sprite;
     }
@@ -296,7 +314,8 @@ public class DialogSystem : MonoBehaviour
     }
 
     private void TextureToSprite(byte[] ImgByte, Image image)     {
-        Texture2D texture2D = new Texture2D(1080, 1920);         texture2D.LoadImage(ImgByte);
+        Texture2D texture2D = new Texture2D(1080, 1920);
+        texture2D.LoadImage(ImgByte);
         Sprite sprite = Sprite.Create(texture2D, new Rect(0, 0, texture2D.width, texture2D.height), new Vector2(0.5f, 0.5f));
         image.sprite = sprite;
     }
@@ -309,16 +328,17 @@ public class DialogSystem : MonoBehaviour
         return imgByte;
     }
 
-        void GetTextFromFile(string path)     {
+    void GetTextFromFile(string path)     {
         string[] line = File.ReadAllLines(path);
-        textList.Clear();         index = 0; 
+        textList.Clear();
+        index = 0;
         for (int i = 0; i < line.Length; i++)
         {
             textList.Add(line[i]);
         }
     }
 
-        void BetterInterface()     {
+    void BetterInterface()     {
         int num = NumberOfFullSlots();
         int[] index = IndexOfFullSlots();
 
@@ -367,7 +387,8 @@ public class DialogSystem : MonoBehaviour
                 slotEmpty[i] = false;
                 i = 4;
             }
-            i++;         }
+            i++;
+        }
     }
 
     int[] RestOfFour(int num)     {
@@ -411,7 +432,7 @@ public class DialogSystem : MonoBehaviour
         return index;
     }
 
-        public void ChooseChaper(string chapter)     {
+    public void ChooseChaper(string chapter)     {
         int temp = strToIntTexts[Application.streamingAssetsPath + "/TextFile/" + chapter + ".txt"];
         GetTextFromFile(intToStrTexts[temp]);
         CloseMenu();
@@ -445,7 +466,7 @@ public class DialogSystem : MonoBehaviour
         {
             background.sprite = strToNewChapterFitstScene["sc" + chapter.ToString() + ".png"];
         }
-        
+
         yield return new WaitForSeconds(0.5f);
         shining.color = new Vector4(0, 0, 0, 0.75f);
         yield return new WaitForSeconds(0.1f);
@@ -462,9 +483,10 @@ public class DialogSystem : MonoBehaviour
         if (!Input.GetKeyDown(KeyCode.Space))
         {
             StartCoroutine(Show(0.75f, menu.GetComponent<Image>()));
-            StartCoroutine(Hide(0, menuButton.image));            StartCoroutine(Hide(0, autoButton.image));
+            StartCoroutine(Hide(0, menuButton.image));
+            StartCoroutine(Hide(0, autoButton.image));
             StartCoroutine(Hide(0, autoButtonClosed.image));
-                    }
+        }
     }
 
     public void CloseMenu()     {
@@ -503,7 +525,7 @@ public class DialogSystem : MonoBehaviour
         }
     }
 
-        IEnumerator ChangeScene(Sprite sprite)     {
+    IEnumerator ChangeScene(Sprite sprite)     {
         for (int j = 0; j < 4; j++)
         {
             CharacterGrey(slotEmpty[j], faceImage[j], nameImage[j], nameLabel[j]);
@@ -517,7 +539,8 @@ public class DialogSystem : MonoBehaviour
         shining.color = new Vector4(0, 0, 0, 0.75f);
         yield return new WaitForSeconds(0.1f);
         shining.color = new Vector4(0, 0, 0, 1);
-        background.sprite = sprite;         yield return new WaitForSeconds(0.5f);
+        background.sprite = sprite;
+        yield return new WaitForSeconds(0.5f);
         shining.color = new Vector4(0, 0, 0, 0.75f);
         yield return new WaitForSeconds(0.1f);
         shining.color = new Vector4(0, 0, 0, 0.5f);
@@ -576,7 +599,7 @@ public class DialogSystem : MonoBehaviour
         shining.color = new Vector4(0, 0, 0, 0);
     }
 
-        IEnumerator StopPlayingBGM()
+    IEnumerator StopPlayingBGM()
     {
         bgmSources.volume = 0.3f;
         yield return new WaitForSeconds(0.5f);
@@ -613,10 +636,11 @@ public class DialogSystem : MonoBehaviour
     }
 
     IEnumerator Wait(Image image)     {
-                if (bigger == false)         {
+        if (bigger == false)         {
             image.transform.localScale += new Vector3(0.003f, 0.003f, 0);
             bigger = true;
-            yield return new WaitForSeconds(spriteSpeed);             image.transform.localScale -= new Vector3(0.003f, 0.003f, 0);
+            yield return new WaitForSeconds(spriteSpeed);
+            image.transform.localScale -= new Vector3(0.003f, 0.003f, 0);
         }
         bigger = false;
     }
@@ -701,7 +725,12 @@ public class DialogSystem : MonoBehaviour
     }
 
     IEnumerator SetTextUI()     {
-        typingSound.volume = typingVolume;         textLabel.color = new Vector4(0, 0, 0, 1);         textFinished = false;         textLabel.text = "";         littleArrow.color = new Vector4(1, 1, 1, 0);         nextLine = false; 
+        typingSound.volume = typingVolume;
+        textLabel.color = new Vector4(0, 0, 0, 1);
+        textFinished = false;
+        textLabel.text = "";
+        littleArrow.color = new Vector4(1, 1, 1, 0);
+        nextLine = false;
         if (foregroundIsOpen)
         {
             StartCoroutine(CloseForeground());
@@ -709,22 +738,22 @@ public class DialogSystem : MonoBehaviour
             yield return new WaitForSeconds(0.5f);
         }
 
-                        for (int i = 0; i < 8; i++)
+        for (int i = 0; i < 8; i++)
         {
             OnOff();
         }
 
-                if (textList[index].Substring(textList[index].Length - 3, 1) == "：")
+        if (textList[index].Substring(textList[index].Length - 3, 1) == "：")
         {
             for (int k = 0; k < namesOfNPC.Length; k++)
             {
                 if (textList[index] == numToNames[k] + "：" + textList[index].Substring(textList[index].Length - 2, 2))
                 {
-                                        for (int i = 0; i < 4; i++)
+                    for (int i = 0; i < 4; i++)
                     {
                         if (nameLabel[i].text == numToNames[k])
                         {
-                                                        int[] rest = RestOfFour(i);
+                            int[] rest = RestOfFour(i);
                             for (int j = 0; j < 3; j++)
                             {
                                 CharacterGrey(slotEmpty[rest[j]], faceImage[rest[j]], nameImage[rest[j]], nameLabel[rest[j]]);
@@ -754,13 +783,12 @@ public class DialogSystem : MonoBehaviour
             {
                 if (textList[index] == numToNames[k] + "：")
                 {
-                                        for (int i = 0; i < 4; i++)
+                    for (int i = 0; i < 4; i++)
                     {
                         if (nameLabel[i].text == numToNames[k])
                         {
-                            
 
-                                                        int[] rest = RestOfFour(i);
+                            int[] rest = RestOfFour(i);
                             for (int j = 0; j < 3; j++)
                             {
                                 CharacterGrey(slotEmpty[rest[j]], faceImage[rest[j]], nameImage[rest[j]], nameLabel[rest[j]]);
@@ -782,136 +810,152 @@ public class DialogSystem : MonoBehaviour
             Debug.Log("目前一行只有一个字会报错，可以先在后面加句号/省略号等");
         }
 
-                int letter = 0;
+        int letter = 0;
         while (letter < textList[index].Length)
         {
             bool typing = true;
-                        if (textList[index][letter] == '#')
+            if (textList[index][letter] == '#')
             {
                 typing = false;
                 letter++;
                 switch (textList[index][letter])
                 {
-                    case '>':
-                        textLabel.fontSize += 10;
-                        break;
-                    case '<':
-                        textLabel.fontSize -= 10;
-                        break;
-                    case 'b':
+                case '>':
+                    textLabel.fontSize += 10;
+                    break;
+                case '<':
+                    textLabel.fontSize -= 10;
+                    break;
+                case 'b':
+                    letter++;
+                    switch (textList[index][letter])
+                    {
+                    case 'g':
                         letter++;
                         switch (textList[index][letter])
                         {
-                            case 'g':
-                                letter++;
-                                switch (textList[index][letter])
-                                {
-                                    case 'm':
-                                        letter++;
+                        case 'm':
+                            letter++;
 
-                                        if(textList[index][letter] == 'x')
-                                        {
-                                            StartCoroutine(StopPlayingBGM());
-                                        }
-                                        else if(textList[index][letter] == 'o')
-                                        {
-                                            StartCoroutine(StartPlayingBGM());
-                                        }
-                                        else
-                                        {
-                                            char[] csBgm = { textList[index][letter], textList[index][letter + 1] };
-                                            letter++;
-                                            string strBgm = new string(csBgm);
-                                            bgmIndex = int.Parse(strBgm);
-                                            changeBGM = true;
-                                        }
-                                        break;
-                                    case 's':                                         letter++;
-                                        char[] csBgs = { textList[index][letter], textList[index][letter + 1] };
-                                        letter++;
-                                        string strBgs = new string(csBgs);
-                                        bgsIndex = int.Parse(strBgs);
-                                        changeBGS = true;
-                                        break;
-                                }
-                                break;
-                        }
-                        break;
-                    case 'c':                         letter++;
-                        switch (textList[index][letter])
-                        {
-                            case 'b':                                 textLabel.color = new Vector4(0, 0, 1, 1);
-                                break;
-                            case 'g':                                 letter++;
-                                char[] cs = { textList[index][letter], textList[index][letter + 1] };
+                            if(textList[index][letter] == 'x')
+                            {
+                                StartCoroutine(StopPlayingBGM());
+                            }
+                            else if(textList[index][letter] == 'o')
+                            {
+                                StartCoroutine(StartPlayingBGM());
+                            }
+                            else
+                            {
+                                char[] csBgm = { textList[index][letter], textList[index][letter + 1] };
                                 letter++;
-                                string str = new string(cs);
-                                str = "cg" + str + ".png";
-                                StartCoroutine(ShowForeground(strToForegroundScenes[str]));
-                                break;
-                            case 'r':                                 textLabel.color = new Vector4(1, 0, 0, 1);
-                                break;
-                            case 'h':                                 textLabel.color = new Vector4(0, 0, 0, 1);
-                                break;
+                                string strBgm = new string(csBgm);
+                                bgmIndex = int.Parse(strBgm);
+                                changeBGM = true;
+                            }
+                            break;
+                        case 's':
+                            letter++;
+                            char[] csBgs = { textList[index][letter], textList[index][letter + 1] };
+                            letter++;
+                            string strBgs = new string(csBgs);
+                            bgsIndex = int.Parse(strBgs);
+                            changeBGS = true;
+                            break;
                         }
                         break;
-                    case 'd':                         diceSound.Play();
+                    }
+                    break;
+                case 'c':
+                    letter++;
+                    switch (textList[index][letter])
+                    {
+                    case 'b':
+                        textLabel.color = new Vector4(0, 0, 1, 1);
                         break;
-                    case 'k':                         letter++;
-                        switch (textList[index][letter])
+                    case 'g':
+                        letter++;
+                        char[] cs = { textList[index][letter], textList[index][letter + 1] };
+                        letter++;
+                        string str = new string(cs);
+                        str = "cg" + str + ".png";
+                        StartCoroutine(ShowForeground(strToForegroundScenes[str]));
+                        break;
+                    case 'r':
+                        textLabel.color = new Vector4(1, 0, 0, 1);
+                        break;
+                    case 'h':
+                        textLabel.color = new Vector4(0, 0, 0, 1);
+                        break;
+                    }
+                    break;
+                case 'd':
+                    diceSound.Play();
+                    break;
+                case 'k':
+                    letter++;
+                    switch (textList[index][letter])
+                    {
+                    case 'p':
+                        for (int i = 0; i < 4; i++)
                         {
-                            case 'p':
-                                for (int i = 0; i < 4; i++)
-                                {
-                                    CharacterGrey(slotEmpty[i], faceImage[i], nameImage[i], nameLabel[i]);
-                                }
-                                typingSound.clip = typingSoundClips[typingSoundClips.Length - 1];
-                                break;
+                            CharacterGrey(slotEmpty[i], faceImage[i], nameImage[i], nameLabel[i]);
                         }
+                        typingSound.clip = typingSoundClips[typingSoundClips.Length - 1];
                         break;
-                    case 'l':                         letter++;
-                        switch (textList[index][letter])
-                        {
-                            case 'b':                                 StartCoroutine(Shine(shining, 0, 0, 0));                                 break;
-                            case 'r':                                 StartCoroutine(Shine(shining, 1, 0, 0));
-                                break;
-                            case 'w':                                 StartCoroutine(Shine(shining, 1, 1, 1));
-                                break;
-                        }
+                    }
+                    break;
+                case 'l':
+                    letter++;
+                    switch (textList[index][letter])
+                    {
+                    case 'b':
+                        StartCoroutine(Shine(shining, 0, 0, 0));
                         break;
-                    case 's':                         letter++;
-                        switch (textList[index][letter])
-                        {
-                            case '>':
-                                textSpeed *= 1 / 3;
-                                break;
-                            case '<':
-                                textSpeed *= 6;
-                                break;
-                            case 'c':                                 letter++;
-                                char[] cs = { textList[index][letter], textList[index][letter + 1] };
-                                letter++;
-                                string str = new string(cs);
-                                str = "sc" + str + ".png";
-                                StartCoroutine(ChangeScene(strToScenes[str]));
-                                isChangingScene = true;
-                                break;
-                        }
+                    case 'r':
+                        StartCoroutine(Shine(shining, 1, 0, 0));
                         break;
-                    case 'y':                         shake = true;
+                    case 'w':
+                        StartCoroutine(Shine(shining, 1, 1, 1));
                         break;
+                    }
+                    break;
+                case 's':
+                    letter++;
+                    switch (textList[index][letter])
+                    {
+                    case '>':
+                        textSpeed *= 1 / 3;
+                        break;
+                    case '<':
+                        textSpeed *= 6;
+                        break;
+                    case 'c':
+                        letter++;
+                        char[] cs = { textList[index][letter], textList[index][letter + 1] };
+                        letter++;
+                        string str = new string(cs);
+                        str = "sc" + str + ".png";
+                        StartCoroutine(ChangeScene(strToScenes[str]));
+                        isChangingScene = true;
+                        break;
+                    }
+                    break;
+                case 'y':
+                    shake = true;
+                    break;
                 }
                 if(letter < textList[index].Length - 1)                 {
                     letter++;
                 }
             }
-            
+
             if(typing)
             {
                 typingSound.Play();
             }
 
-            textLabel.text += textList[index][letter]; 
+            textLabel.text += textList[index][letter];
             letter++;
 
             if (!betterInterface)
@@ -927,13 +971,17 @@ public class DialogSystem : MonoBehaviour
 
             if (isChangingScene)
             {
-                yield return new WaitForSeconds(1);                 isChangingScene = false;
+                yield return new WaitForSeconds(1);
+                isChangingScene = false;
             }
 
             yield return new WaitForSeconds(textSpeed);
         }
 
-        cancelTyping = false;         textFinished = true;         textSpeed = tempTextSpeed;         littleArrow.color = new Vector4(0, 0, 0, 1); 
+        cancelTyping = false;
+        textFinished = true;
+        textSpeed = tempTextSpeed;
+        littleArrow.color = new Vector4(0, 0, 0, 1);
         if (auto)
         {
             yield return new WaitForSeconds(autoTextWaitingSpeed);
